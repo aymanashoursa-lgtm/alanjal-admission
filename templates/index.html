@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>نظام الاختبارات الإلكتروني</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /* CSS داخل الصفحة كما طلبت — أزرار كبيرة، أيقونات، خلفية متحركة */
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Cairo", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #000;
+      padding-bottom: 150px;
+    }
+
+    .card {
+      width: 95%;
+      max-width: 720px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 50px;
+      color: #e50b0b;
+    }
+    h2 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 40px;
+      color: #333;
+    }
+    h3 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 24px;
+      color: #666;
+    }
+    p.lead {
+      margin-top: 0;
+      margin-bottom: 24px;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .big-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      padding: 18px 28px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      min-width: 260px;
+      justify-content: center;
+      border: 2px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    .big-btn .icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .student {
+      background: linear-gradient(90deg,#00d2ff,#3a7bd5);
+      color: #fff;
+    }
+    .admin {
+      background: linear-gradient(90deg,#ff7eb3,#ff758c);
+      color: #fff;
+    }
+    .teacher {
+      background: linear-gradient(90deg,#42e695,#3bb2b8);
+      color: #fff;
+    }
+    .system-admin {
+      background: linear-gradient(90deg,#ffd89b,#19547b);
+      color: #fff;
+    }
+
+    .big-btn:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+    .big-btn:active { transform: translateY(-2px); }
+
+    .footer {
+      margin-top: 22px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* Responsive */
+    @media (max-width:520px){
+      .big-btn { min-width: 100%; font-size: 16px; padding: 14px; }
+      .buttons { gap: 12px; }
+    }
+
+    .cognia-badges {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 10000;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .cognia-badges img {
+        height: 70px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+    }
+
+    .cognia-badges img:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes welcomeGlow {
+        0%, 100% {
+            text-shadow: 0 3px 15px rgba(255,255,255,0.3), 0 0 20px rgba(255,255,255,0.1);
+            transform: scale(1);
+        }
+        50% {
+            text-shadow: 0 3px 20px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.3);
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes welcomeMessage {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .welcome-animated {
+        animation: welcomeMessage 2s ease-in-out infinite;
+    }
+
+    .right-side-text {
+        display:none;
+        color: #e50b0b;
+    }
+
+    .right-side-image {
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ url_for('static', filename='2.png') }}" alt="Decoration" class="right-side-image">
+  
+  <div class="right-side-text">
+    رحلتك نحو التميز تبدأ من هنا! ✨
+  </div>
+  
+  <div class="cognia-badges">
+    <img src="{{ url_for('static', filename='1.png') }}" alt="Cognia System of Distinction">
+    <img src="{{ url_for('static', filename='Cognia.png') }}" alt="Cognia Accredited">
+  </div>
+  
+  <div class="card" role="main">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="الشعار" style="display:block; margin:0 auto 0px auto; height:160px; width:auto">
+    <h1>Admission Test System  </h1>
+    <h2>Al-Anjal Private School</h2>
+    <h3>نظام اختبارات القبول الالكتروني لمدارس الأنجال الأهلية</h3>
+    
+    <div class="buttons">
+      <!-- روابط تستخدم أسماء الروت الموجودة في app.py -->
+      <a class="big-btn student" href="{{ url_for('student_select_model') }}">
+        <span class="icon">🎓</span>
+        <span>دخول الطالب</span>
+      </a>
+
+      <a class="big-btn admin" href="{{ url_for('admin_login') }}">
+        <span class="icon">🛡️</span>
+        <span> دخول المشرف</span>
+      </a>
+
+      <a class="big-btn teacher" href="{{ url_for('director_login') }}">
+        <span class="icon">👨‍💼</span>
+        <span> دخول المدير</span>
+      </a>
+
+      <a class="big-btn system-admin" href="{{ url_for('system_admin_login') }}">
+        <span class="icon">⚙️</span>
+        <span> مدير النظام</span>
+      </a>
+    </div>
+
+    <div class="footer">
+      <font color="red" >
+          <b>
+       حقوق الطبع محفوظة لدى مدارس الانجال الأهلية©
+          </b>
+      </font>
+      </div>
+  </div>
+  
+  <div class="welcome-animated" style="position:fixed; bottom:60px; left:20px; right:20px; text-align:center; font-weight:800; font-size:20px; color:#333; z-index:9999;">
+    أهلاً بكم في مدارس الأنجال الأهلية حيث لا حدود للإبداع ✨
+  </div>
+  
+  <div style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#333; padding:10px; background:#f9f9f9; z-index:9999; border-top:1px solid #e0e0e0">
+    تصميم قسم الحاسب الآلى بمدارس الأنجال الأهلية©
+  </div>
+</body>
+</html>

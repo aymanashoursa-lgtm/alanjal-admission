@@ -1,0 +1,19 @@
+<<<<<<< HEAD
+Flask==2.3.3
+pandas==2.2.3
+openpyxl==3.1.2
+Werkzeug==2.3.7
+twilio==8.10.0
+gunicorn
+
+
+
+
+=======
+Flask==2.3.3
+pandas==2.2.3
+openpyxl==3.1.2
+Werkzeug==2.3.7
+twilio==8.10.0
+gunicorn
+>>>>>>> ddcfc68 (first commit)

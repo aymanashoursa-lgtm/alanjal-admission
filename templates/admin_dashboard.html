@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة تحكم المشرف</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .btn {
+            background-color: #667eea;
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 22px;
+            transition: all 0.3s ease;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background-color: #764ba2;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .cognia-badges {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 10000;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .cognia-badges img {
+            height: 70px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .cognia-badges img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body style="padding-top:140px; padding-bottom:100px">
+  <div class="cognia-badges">
+    <img src="{{ url_for('static', filename='1.png') }}" alt="Cognia System of Distinction">
+    <img src="{{ url_for('static', filename='Cognia.png') }}" alt="Cognia Accredited">
+  </div>
+  <div style="position:fixed; top:8px; right:14px; z-index:9999; text-align:right">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="الشعار" style="height:120px; display:block; margin:0; padding:0;">
+    <div style="font-size:18px; color:#fff; background: linear-gradient(135deg, #4facfe, #00f2fe); padding:12px 20px; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.2); margin-top:15px;">
+        🎓 مرحبا، {% set user_name = current_user['name'] if current_user and current_user.get('name') else (current_user['username'] if current_user else 'المشرف') %}{{ user_name }}
+    </div>
+  </div>
+    <h1 style="margin-top:40px">🎓 لوحة تحكم المشرف</h1>
+    {% with msgs = get_flashed_messages() %}
+      {% if msgs %}
+        <div style="max-width:600px;margin:10px auto 14px auto;background:#e9fbe9;color:#155724;border:1px solid #c3e6cb;padding:10px 14px;border-radius:10px;text-align:right;font-weight:700">
+          {{ msgs[-1] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="button-container">
+        <a href="{{ url_for('admin_add_question') }}" class="btn">
+            <span class="icon">➕</span>
+            إضافة سؤال جديد
+        </a>
+
+        <a href="{{ url_for('view_results') }}" class="btn" style="background: linear-gradient(135deg, #28a745, #20c997);">
+            <span class="icon">📊</span>
+            عرض نتائج الطلاب
+        </a>
+
+        <a href="{{ url_for('index') }}" class="btn" style="background-color:#ff4b5c; color:white;">
+            <span class="icon">🚪</span>
+            تسجيل الخروج
+        </a>
+    </div>
+
+    <div style="margin-top:30px; width:90%; max-width:900px; background:#f9f9f9; padding:20px; border-radius:14px; border:1px solid #e0e0e0;">
+      <h2 style="margin-top:0">إدارة الاختبارات</h2>
+      <form method="post" action="{{ url_for('admin_create_exam') }}" style="display:flex; flex-direction:column; gap:15px; max-width:600px; margin:0 auto;">
+        <input type="text" name="title" placeholder="عنوان الاختبار" required style="padding:12px; border-radius:10px; border:none; width:100%; font-size:16px; box-sizing:border-box">
+        <select name="subject" required style="padding:12px; border-radius:10px; border:none; width:100%; cursor:pointer; font-size:16px; box-sizing:border-box">
+          <option value="">اختر المادة</option>
+          <option value="رياضيات">رياضيات</option>
+          <option value="لغة عربية">لغة عربية</option>
+          <option value="علوم">علوم</option>
+          <option value="لغة إنجليزية">لغة إنجليزية</option>
+        </select>
+        <select name="grade" required style="padding:12px; border-radius:10px; border:none; width:100%; cursor:pointer; font-size:16px; box-sizing:border-box">
+          <option value="">اختر الصف</option>
+          <option value="الصف الرابع">الصف الرابع</option>
+          <option value="الصف الخامس">الصف الخامس</option>
+          <option value="الصف السادس">الصف السادس</option>
+          <option value="الصف الأول المتوسط">الصف الأول المتوسط</option>
+          <option value="الصف الثاني المتوسط">الصف الثاني المتوسط</option>
+          <option value="الصف الثالث المتوسط">الصف الثالث المتوسط</option>
+          <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+          <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+          <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+        </select>
+        <select name="model_id" required style="padding:12px; border-radius:10px; border:none; width:100%; cursor:pointer; font-size:16px; box-sizing:border-box">
+          <option value="">اختر النموذج</option>
+          {% for m in models %}
+          <option value="{{ m['id'] }}">{{ m['name'] }}</option>
+          {% endfor %}
+        </select>
+        <select name="section" required style="padding:12px; border-radius:10px; border:none; width:100%; cursor:pointer; font-size:16px; box-sizing:border-box">
+          <option value="">اختر القسم</option>
+          <option value="عربي">عربي</option>
+          <option value="دولي">دولي</option>
+        </select>
+        <button type="submit" class="btn" style="width:100%; padding:14px; font-size:22px; font-weight:700; margin-top:10px; background: linear-gradient(135deg,#f093fb,#f5576c); color:white; border:none">إنشاء اختبار وإضافة أسئلة</button>
+      </form>
+
+      {% if exams %}
+        <div style="margin-top:16px; text-align:right">
+          <table style="width:100%; border-collapse:collapse; background:#fff; color:#222; border-radius:10px; overflow:hidden">
+            <thead style="background:#f3f3f8">
+              <tr>
+                <th style="padding:12px; text-align:right">#</th>
+                <th style="padding:12px; text-align:right">العنوان</th>
+                <th style="padding:12px; text-align:right">المادة</th>
+                <th style="padding:12px; text-align:right">النموذج</th>
+                <th style="padding:12px; text-align:right">الحالة</th>
+                <th style="padding:12px; text-align:right">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in exams %}
+              <tr style="border-top:1px solid #eee">
+                <td style="padding:10px">{{ e.id }}</td>
+                <td style="padding:10px">{{ e.title }}</td>
+                <td style="padding:10px">{{ e.subject }}</td>
+                <td style="padding:10px">
+                  {% if e.model_id %}
+                    النموذج {{ e.model_id }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td style="padding:10px">{{ 'مفعّل' if e.is_active==1 else 'معطّل' }}</td>
+                <td style="padding:10px">
+                  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                    <a href="{{ url_for('admin_add_question_to_exam', exam_id=e.id) }}" class="btn" style="width:auto; text-decoration:none; display:inline-block; padding:8px 15px; font-size:14px; background:#4caf50; color:white; border-radius:8px">✏️ تعديل</a>
+                    <form method="post" action="{{ url_for('admin_toggle_exam', exam_id=e.id) }}" style="margin:0; display:inline-block">
+                      <button class="btn" type="submit" style="width:auto; padding:8px 15px; font-size:14px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer">🔄 تبديل الحالة</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </div>
+
+    <footer style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#333; padding:10px; z-index:9999; background: #f9f9f9; border-top:1px solid #e0e0e0;">
+      تصميم قسم الحاسب الآلى بمدارس الأنجال الأهلية©
+    </footer>
+</body>
+</html>

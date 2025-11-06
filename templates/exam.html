@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>ط§ط®طھط¨ط§ط± ط§ظ„ظ…ط§ط¯ط© - {{ subject }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&display=swap');
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Cairo",sans-serif;
+      background: #ffffff;
+      color:#333;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .card{ width:100%; max-width:900px; background:#f9f9f9; border-radius:14px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.1); border:1px solid #e0e0e0 }
+    h1{ margin:0 0 10px 0; font-size:22px; text-align:center }
+    
+    /* ظ…ظ†ط¹ ط§ظ„ظ†ط³ط® ظˆط§ظ„ظ„طµظ‚ */
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    .qbox {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+    
+    .warning-banner {
+      background: #ff4444;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(255,68,68,0.3);
+    }
+    .progress-wrap{ 
+      margin:18px 0 24px 0; 
+      background:rgba(255,255,255,0.14); 
+      height:28px; 
+      border-radius:16px; 
+      overflow:hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .progress{ 
+      height:100%; 
+      background:linear-gradient(90deg,#00d2ff,#0072ff); 
+      transition:width .4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0,210,255,0.3);
+    }
+    .progress::after{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 2s infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .progress-label{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 14px;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    form { display:block }
+    .qbox{ background:rgba(255,255,255,0.95); color:#111; border-radius:10px; padding:16px; margin-bottom:14px }
+    .qtext{ font-weight:700; margin-bottom:8px }
+    .options label{ display:block; padding:10px; border-radius:8px; margin:8px 0; background:#f6f7fb; cursor:pointer; transition: background .15s }
+    .options input[type="radio"]{ margin-left:10px }
+    .options label:hover{ background:#e9f1ff }
+
+    textarea{ width:100%; min-height:120px; padding:12px; border-radius:8px; border:1px solid #ddd; resize:vertical }
+
+    .submit-btn{
+      display:block;
+      margin:20px auto 0 auto;
+      padding:14px 28px;
+      font-size:18px;
+      font-weight:700;
+      border-radius:30px;
+      border:none;
+      background:linear-gradient(90deg,#ff7a7a,#ff4b5c);
+      color:white;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(255,75,92,0.18);
+    }
+    .note{ font-size:13px; color:rgba(255,255,255,0.85); text-align:center; margin-top:12px }
+
+    @media (max-width:600px){
+      .card{ padding:16px } .submit-btn{ width:100% }
+    }
+    
+
+.logo {
+    height: 100px;
+    width: auto;
+    
+}
+
+    .cognia-badges {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 10000;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .cognia-badges img {
+        height: 70px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+    }
+
+    .cognia-badges img:hover {
+        transform: scale(1.05);
+    }
+  </style>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="cognia-badges">
+    <img src="{{ url_for('static', filename='1.png') }}" alt="Cognia System of Distinction">
+    <img src="{{ url_for('static', filename='Cognia.png') }}" alt="Cognia Accredited">
+  </div>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="ط§ظ„ط´ط¹ط§ط±" style="position:fixed; top:14px; right:14px; height:120px; z-index:9999">
+  <div class="card">
+    <div class="warning-banner">
+      âڑ ï¸ڈ ظ†ط¸ط§ظ… ط§ظ„ظ…ط±ط§ظ‚ط¨ط© ظ…ظپط¹ظ‘ظ„ - ظٹظڈظ…ظ†ط¹ ظ…ط؛ط§ط¯ط±ط© ط§ظ„طµظپط­ط© ط£ظˆ ط¥ط؛ظ„ط§ظ‚ظ‡ط§ ط£ظˆ ظپطھط­ ظ†ظˆط§ظپط° ط£ط®ط±ظ‰. ط£ظٹ ظ…ط­ط§ظˆظ„ط© ط®ط±ظˆط¬ ط³ظٹط¤ط¯ظٹ ط¥ظ„ظ‰ ظپظ‚ط¯ط§ظ† ط¥ط¬ط§ط¨ط§طھظƒ!
+    </div>
+    {% if questions %}
+    <h1>ط§ظ„ظ…ط§ط¯ط©: {{ subject }}</h1>
+    {% if remaining_seconds is not none %}
+      <div id="timer" data-remaining="{{ remaining_seconds }}" style="text-align:center;margin:8px 0 14px 0;font-weight:800;font-size:18px;background:rgba(255,255,255,0.15);padding:8px;border-radius:10px"></div>
+    {% endif %}
+
+    <div class="progress-wrap">
+      <div class="progress" id="progressBar" data-progress="{{ progress | int }}"></div>
+      <span class="progress-label" id="progressLabel">0%</span>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('student_exam', subject=subject) }}">
+      {% if not questions %}
+        <div style="background:#fff;color:#111;padding:20px;border-radius:8px;font-size:18px;font-weight:bold;text-align:center">ظ„ط§ ظٹظˆط¬ط¯ ط§ط®طھط¨ط§ط± ظ„ظ‡ط°ط§ ط§ظ„طµظپ</div>
+      {% else %}
+        {% for q in questions %}
+          <div class="qbox">
+            <div class="qtext" id="question_{{ q.id }}_text">{{ loop.index }}.</div>
+            <script>
+              document.getElementById('question_{{ q.id }}_text').innerHTML = {{ q.question|tojson|safe }};
+            </script>
+
+            {% if q.type == 'ط§ط®طھظٹط§ط±ظٹ' %}
+              <div class="options">
+                {% for opt in q.options %}
+                  <label>
+                    <input type="radio" name="q{{ q.id }}" value="{{ opt }}">
+                    {{ opt }}
+                  </label>
+                {% endfor %}
+              </div>
+
+            {% elif q.type == 'ظ…ظ‚ط§ظ„ظٹ' %}
+              <textarea name="q{{ q.id }}" placeholder="ط§ظƒطھط¨ ط¥ط¬ط§ط¨طھظƒ ظ‡ظ†ط§..."></textarea>
+
+            {% elif q.type == 'طµط­ ط£ظˆ ط®ط·ط£' %}
+              <div class="options" style="flex-direction:row;gap:20px;justify-content:center">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:12px 24px;background:#e8f5e9;border-radius:10px;transition:all 0.2s" onmouseover="this.style.background='#c8e6c9'" onmouseout="this.style.background='#e8f5e9'">
+                  <input type="radio" name="q{{ q.id }}" value="طµط­">
+                  <span style="font-weight:bold;font-size:18px;color:#2e7d32">âœ“ طµط­</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:12px 24px;background:#ffebee;border-radius:10px;transition:all 0.2s" onmouseover="this.style.background='#ffcdd2'" onmouseout="this.style.background='#ffebee'">
+                  <input type="radio" name="q{{ q.id }}" value="ط®ط·ط£">
+                  <span style="font-weight:bold;font-size:18px;color:#c62828">âœ— ط®ط·ط£</span>
+                </label>
+              </div>
+
+            {% elif q.type == 'طµظˆط±ط©' %}
+              {% if q.image_path %}
+                <div style="text-align:center;margin-bottom:15px">
+                  <img src="{{ url_for('static', filename=q.image_path) }}" alt="طµظˆط±ط© ط§ظ„ط³ط¤ط§ظ„" style="max-width:100%;max-height:400px;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,0.15);border:2px solid #ddd">
+                </div>
+              {% endif %}
+              {% if q.options and q.options|length > 0 %}
+                <div class="options">
+                  {% for opt in q.options %}
+                    <label>
+                      <input type="radio" name="q{{ q.id }}" value="{{ opt }}">
+                      {{ opt }}
+                    </label>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <button class="submit-btn" type="submit">ط¥ط±ط³ط§ظ„ ط§ظ„ط¥ط¬ط§ط¨ط§طھ âœ…</button>
+      {% endif %}
+    </form>
+
+    <div class="note">ط¨ط¹ط¯ ط§ظ„ط¥ط±ط³ط§ظ„ ط³طھظ†طھظ‚ظ„ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظ„ظ„ظ…ط§ط¯ط© ط§ظ„طھط§ظ„ظٹط© (ط£ظˆ ط±ط³ط§ظ„ط© ط´ظƒط± ط¹ظ†ط¯ ط§ظ„ط§ظ†طھظ‡ط§ط،).</div>
+  </div>
+  <script>
+    (function(){
+      var bar = document.getElementById('progressBar');
+      var label = document.getElementById('progressLabel');
+      if(bar){
+        var p = parseInt(bar.dataset.progress || '0', 10);
+        p = isNaN(p) ? 0 : Math.max(0, Math.min(100, p));
+        bar.style.width = p + '%';
+        if(label) label.textContent = p + '%';
+      }
+      var timer = document.getElementById('timer');
+      if(timer){
+        var left = parseInt(timer.dataset.remaining || '0', 10);
+        left = isNaN(left) ? 0 : left;
+        function fmt(s){ var m = Math.floor(s/60), sec = s%60; return m+":"+(sec<10?"0":"")+sec; }
+        function tick(){
+          timer.textContent = 'ط§ظ„ظˆظ‚طھ ط§ظ„ظ…طھط¨ظ‚ظٹ: ' + fmt(left);
+          if(left <= 0){ var form = document.querySelector('form'); if(form) form.submit(); return; }
+          left -= 1; setTimeout(tick, 1000);
+        }
+        tick();
+      }
+      
+      // ظ…طھط؛ظٹط± ظ„طھطھط¨ط¹ ظ…ط§ ط¥ط°ط§ ظƒط§ظ† ط§ظ„ط·ط§ظ„ط¨ ظٹط±ظٹط¯ ط¥ط±ط³ط§ظ„ ط§ظ„ط¥ط¬ط§ط¨ط§طھ
+      var isSubmitting = false;
+      
+      // ط¹ظ†ط¯ ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ ط²ط± ط§ظ„ط¥ط±ط³ط§ظ„
+      var submitBtn = document.querySelector('.submit-btn');
+      if(submitBtn){
+        submitBtn.addEventListener('click', function() {
+          isSubmitting = true;
+        });
+      }
+      
+      // ظ…ظ†ط¹ ط§ظ„ط؛ط´ - ظ…ظ†ط¹ ظپطھط­ ط§ظ„ظ†ط§ظپط°ط© ط§ظ„ظ…ظ†ط¨ط«ظ‚ط© (ظپظ‚ط· ط¹ظ†ط¯ ظ…ط­ط§ظˆظ„ط© ط§ظ„ط¥ط؛ظ„ط§ظ‚ ظˆظ„ظٹط³ ط§ظ„ط¥ط±ط³ط§ظ„)
+      window.addEventListener('beforeunload', function(e) {
+        if(!isSubmitting){
+          e.preventDefault();
+          // ط±ط³ط§ظ„ط© ظ‚ظˆظٹط© ظ„ظ…ظ†ط¹ ط§ظ„ط®ط±ظˆط¬
+          e.returnValue = 'طھط­ط°ظٹط±: ظ…ط؛ط§ط¯ط±ط© ط§ظ„ط§ط®طھط¨ط§ط± ط§ظ„ط¢ظ† ط³ظٹط¤ط¯ظٹ ط¥ظ„ظ‰ ظپظ‚ط¯ط§ظ† ط¥ط¬ط§ط¨ط§طھظƒ! ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯طں';
+          return 'طھط­ط°ظٹط±: ظ…ط؛ط§ط¯ط±ط© ط§ظ„ط§ط®طھط¨ط§ط± ط§ظ„ط¢ظ† ط³ظٹط¤ط¯ظٹ ط¥ظ„ظ‰ ظپظ‚ط¯ط§ظ† ط¥ط¬ط§ط¨ط§طھظƒ! ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯طں';
+        }
+      });
+      
+      // ظ…ظ†ط¹ ط§ظ„ط¥ط؛ظ„ط§ظ‚ ظˆط§ظ„طھظ†ظ‚ظ„ ط®ط§ط±ط¬ ط§ظ„طµظپط­ط©
+      window.addEventListener('blur', function() {
+        if (!isSubmitting) {
+          // ط¥ط¹ط§ط¯ط© ط§ظ„طھط±ظƒظٹط² ط¹ظ„ظ‰ ط§ظ„طµظپط­ط©
+          window.focus();
+        }
+      });
+      
+      // ظ…ظ†ط¹ ط§ظ„ظ†ط³ط® ظˆط§ظ„ظ„طµظ‚
+      document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        alert('âڑ ï¸ڈ ط§ظ„ظ†ط³ط® ط؛ظٹط± ظ…ط³ظ…ظˆط­ ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±');
+      });
+      
+      document.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert('âڑ ï¸ڈ ط§ظ„ظ„طµظ‚ ط؛ظٹط± ظ…ط³ظ…ظˆط­ ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±');
+      });
+      
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('âڑ ï¸ڈ ط§ظ„ظ‚ط§ط¦ظ…ط© ط§ظ„ظٹظ…ظ†ظ‰ ظ…ط¹ط·ظ‘ظ„ط© ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±');
+      });
+      
+      // ظ…ظ†ط¹ ط§ط®طھطµط§ط±ط§طھ ظ„ظˆط­ط© ط§ظ„ظ…ظپط§طھظٹط­
+      document.addEventListener('keydown', function(e) {
+        if (!isSubmitting) {
+          // ظ…ظ†ط¹ F5 ظˆ Ctrl+R ظ„ط¥ط¹ط§ط¯ط© ط§ظ„طھط­ظ…ظٹظ„
+          if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.key === 'R')) {
+            e.preventDefault();
+            alert('âڑ ï¸ڈ ظ„ط§ ظٹظ…ظƒظ†ظƒ ط¥ط¹ط§ط¯ط© طھط­ظ…ظٹظ„ ط§ظ„طµظپط­ط© ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±!');
+            return;
+          }
+          // ظ…ظ†ط¹ Alt+F4 ظپظٹ Windows
+          if (e.altKey && e.key === 'F4') {
+            e.preventDefault();
+            alert('âڑ ï¸ڈ ظ„ط§ ظٹظ…ظƒظ†ظƒ ط¥ط؛ظ„ط§ظ‚ ط§ظ„ظ†ط§ظپط°ط© ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±!');
+            return;
+          }
+          // Ctrl+C, Ctrl+V, Ctrl+A, Ctrl+S, Ctrl+P, F12
+          if ((e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 65 || e.keyCode === 83 || e.keyCode === 80)) || 
+              e.keyCode === 123 || // F12
+              (e.shiftKey && e.keyCode === 121)) { // Shift+F10
+            e.preventDefault();
+            alert('âڑ ï¸ڈ ظ‡ط°ط§ ط§ظ„ط§ط®طھطµط§ط± ظ…ط¹ط·ظ‘ظ„ ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±');
+          }
+        }
+      });
+      
+      // طھطھط¨ط¹ طھط؛ظٹظٹط± ط§ظ„طھط¨ظˆظٹط¨ ظˆط§ظ„ط®ط±ظˆط¬ ظ…ظ† ط§ظ„طµظپط­ط©
+      var warnings = 0;
+      var maxWarnings = 2;
+      
+      document.addEventListener('visibilitychange', function() {
+        // ظ„ط§ طھط¸ظ‡ط± طھط­ط°ظٹط±ط§طھ ط¥ط°ط§ ظƒط§ظ† ط§ظ„ط·ط§ظ„ط¨ ظٹط±ط³ظ„ ط§ظ„ط¥ط¬ط§ط¨ط§طھ
+        if (!isSubmitting && document.hidden) {
+          warnings++;
+          if (warnings > maxWarnings) {
+            alert('âڑ ï¸ڈ طھظ… ط§ظƒطھط´ط§ظپ ظ…ط­ط§ظˆظ„ط§طھ ظ…طھط¹ط¯ط¯ط© ظ„ظ…ط؛ط§ط¯ط±ط© ط§ظ„طµظپط­ط©. ط³ظٹطھظ… ط¥ظ„ط؛ط§ط، ظ…ط­ط§ظˆظ„طھظƒ.');
+            var form = document.querySelector('form');
+            if (form) form.submit();
+          } else {
+            alert('âڑ ï¸ڈ طھط­ط°ظٹط± ' + warnings + ': ظ„ط§ طھط؛ط§ط¯ط± طµظپط­ط© ط§ظ„ط§ط®طھط¨ط§ط±');
+          }
+        }
+      });
+      
+      // ظ…ظ†ط¹ ط§ظ„ط§ظ†طھظ‚ط§ظ„ ظ„ظ„طµظپط­ط© ط§ظ„ط³ط§ط¨ظ‚ط© (ظپظ‚ط· ط¥ط°ط§ ظ„ظ… ظٹظƒظ† ط§ظ„ط·ط§ظ„ط¨ ظٹط±ط³ظ„ ط§ظ„ط¥ط¬ط§ط¨ط§طھ)
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', function(event) {
+          if (!isSubmitting) {
+            window.history.pushState(null, '', window.location.href);
+            alert('âڑ ï¸ڈ ظ„ط§ ظٹظ…ظƒظ†ظƒ ط§ظ„ط¹ظˆط¯ط© ظ„ظ„طµظپط­ط© ط§ظ„ط³ط§ط¨ظ‚ط© ط£ط«ظ†ط§ط، ط§ظ„ط§ط®طھط¨ط§ط±');
+          }
+        });
+      }
+    })();
+  </script>
+  <div style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#fff; padding:10px; background:rgba(0,0,0,0.5); z-index:9999">
+    طھطµظ…ظٹظ… ظ‚ط³ظ… ط§ظ„ط­ط§ط³ط¨ ط§ظ„ط¢ظ„ظ‰ ط¨ظ…ط¯ط§ط±ط³ ط§ظ„ط£ظ†ط¬ط§ظ„ ط§ظ„ط£ظ‡ظ„ظٹط©آ©
+  </div>
+</body>
+</html>

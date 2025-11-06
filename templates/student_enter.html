@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>تسجيل دخول الطالب</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&display=swap');
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Cairo",sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: #ffffff;
+      color:#333;
+      padding-bottom:100px;
+    }
+    .card{
+      width:95%;max-width:450px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius:16px;
+      padding:30px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1{ margin:0 0 8px 0; font-size:24px; color:#333; font-weight:bold; text-align:center }
+    p.lead{ margin:0 0 18px 0; color:#666; text-align:center }
+
+    form { display:flex; flex-direction:column; gap:14px; align-items:center; }
+    
+    input, select {
+      width: 100%;
+      padding:14px;
+      border-radius:10px;
+      border:2px solid #e0e0e0;
+      background: #f8f9fa;
+      font-size:18px;
+      outline:none;
+      color: #333;
+      text-align: right;
+      line-height: 1.5;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    input:focus, select:focus {
+      border-color: #667eea;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    input::placeholder, select {
+      color: #666;
+      text-align: right;
+    }
+    select option {
+      text-align: right;
+    }
+
+    .big-btn {
+      margin-top:0;
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      font-size:18px;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      background: linear-gradient(135deg,#764ba2,#667eea);
+      color:#fff;
+      box-shadow:0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+    .big-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.3);
+    }
+    .big-btn:active{ transform: translateY(0) }
+
+    .small-note{ font-size:13px; color:rgba(255,255,255,0.8); margin-top:8px }
+    @media (max-width:420px){ 
+      .card{ padding:20px; max-width:90% } 
+      .big-btn{ font-size:16px; padding:12px }
+    }
+
+    .cognia-badges {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 10000;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .cognia-badges img {
+        height: 70px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+    }
+
+    .cognia-badges img:hover {
+        transform: scale(1.05);
+    }
+
+    .waiting-message {
+      background: linear-gradient(135deg, #ffd700, #ffb347);
+      color: #333;
+      border: 3px solid #ffa500;
+      padding: 30px 20px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(255, 165, 0, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .waiting-message .icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .waiting-message .text {
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .waiting-message .sub-text {
+      font-size: 16px;
+      color: #555;
+      margin-top: 10px;
+      font-weight: normal;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 25px rgba(255, 165, 0, 0.3);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 12px 35px rgba(255, 165, 0, 0.5);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="cognia-badges">
+    <img src="{{ url_for('static', filename='1.png') }}" alt="Cognia System of Distinction">
+    <img src="{{ url_for('static', filename='Cognia.png') }}" alt="Cognia Accredited">
+  </div>
+  <div class="card">
+    {% if student_status == 'pending' %}
+      <div class="waiting-message" id="waitingMessage">
+        <span class="icon">⏳</span>
+        <div class="text">جارى قبول طلبك...</div>
+        <div class="sub-text">رجاءا الانتظار حتى موافقة مدير النظام</div>
+      </div>
+    {% else %}
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="الشعار" style="display:block; margin:0 auto 20px auto; height:160px; width:auto">
+      <h1>تسجيل دخول الطالب</h1>
+      <p class="lead">ادخل بياناتك الشخصية للبدء في الاختبار</p>
+
+      {% with msgs = get_flashed_messages() %}
+        {% if msgs %}
+          <div style="background:#ff4444;color:white;border:1px solid #ff6666;padding:10px 14px;border-radius:10px;text-align:right;font-weight:700;margin-bottom:15px;width:100%">
+            {{ msgs[-1] }}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('student_enter') }}" id="loginForm">
+        <input type="text" id="full_name" name="full_name" placeholder="الاسم بالكامل" required>
+        
+        <input type="text" id="id_number" name="id_number" placeholder="رقم الهوية" required>
+        
+        <input type="tel" id="phone" name="phone" placeholder="رقم الجوال" required>
+        
+        <select id="grade" name="grade" required>
+          <option value="">اختر الصف الدراسي</option>
+          <option value="الصف الرابع">الصف الرابع</option>
+          <option value="الصف الخامس">الصف الخامس</option>
+          <option value="الصف السادس">الصف السادس</option>
+          <option value="الصف الأول المتوسط">الصف الأول المتوسط</option>
+          <option value="الصف الثاني المتوسط">الصف الثاني المتوسط</option>
+          <option value="الصف الثالث المتوسط">الصف الثالث المتوسط</option>
+          <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+          <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+          <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+        </select>
+
+        <select id="section" name="section" required>
+          <option value="">اختر القسم</option>
+          <option value="عربي">عربي</option>
+          <option value="دولي">دولي</option>
+        </select>
+
+        <button class="big-btn" type="submit">👨‍🎓 ابدأ الاختبارات</button>
+      </form>
+    {% endif %}
+
+    
+  </div>
+  <div style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#333; padding:10px; background:rgba(255,255,255,0.9); z-index:9999">
+    تصميم قسم الحاسب الآلى بمدارس الأنجال الأهلية©
+  </div>
+
+  {% if student_status == 'pending' %}
+  <script>
+    // التحقق من حالة الطالب تلقائياً كل 3 ثوان
+    let checkInterval = setInterval(function() {
+      fetch('{{ url_for("check_student_status") }}')
+        .then(response => response.json())
+        .then(data => {
+          if (data.approved) {
+            // تم اعتماد الطالب - التوجيه إلى صفحة الاختبار
+            clearInterval(checkInterval);
+            window.location.href = '{{ url_for("student_start_exam") }}';
+          } else if (data.status === 'no_session' || data.status === 'not_found') {
+            // لا توجد جلسة أو الطالب غير موجود - إعادة تحميل الصفحة
+            clearInterval(checkInterval);
+            window.location.reload();
+          }
+          // إذا كانت الحالة لا تزال pending، سنستمر في التحقق
+        })
+        .catch(error => {
+          console.error('خطأ في التحقق من الحالة:', error);
+          // في حالة الخطأ، نعيد تحميل الصفحة بعد فترة أطول
+          setTimeout(function() {
+            window.location.reload();
+          }, 10000);
+        });
+    }, 3000); // كل 3 ثوان
+
+    // تنظيف المؤقت عند إغلاق الصفحة
+    window.addEventListener('beforeunload', function() {
+      clearInterval(checkInterval);
+    });
+  </script>
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>ط¥ط¶ط§ظپط© ط£ط³ط¦ظ„ط© ظ„ظ„ط§ظ…طھط­ط§ظ†</title>
+  <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <!-- quill-formula -->
+  <link href="https://cdn.jsdelivr.net/npm/quill-formula@1.0.6/dist/quill.formula.min.css" rel="stylesheet">
+  <style>
+    body{font-family:"Cairo",sans-serif;background:#ffffff;margin:0;padding:20px;text-align:center}
+    h2{color:#333}
+    .exam-info{background:#e3f2fd;padding:15px;border-radius:10px;margin-bottom:20px}
+    form{background:#fff;padding:20px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.1);max-width:800px;margin:auto;border:1px solid #e0e0e0}
+    input,select{width:95%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
+    button{background:linear-gradient(90deg,#667eea,#764ba2);color:#fff;padding:12px 18px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+    
+    /* Custom Quill Styles */
+    .ql-container {
+      font-family: "Cairo", sans-serif;
+      font-size: 16px;
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .ql-editor {
+      min-height: 200px;
+      direction: rtl;
+    }
+    
+    .ql-toolbar {
+      direction: rtl;
+      text-align: right;
+    }
+    
+    /* Custom button styles for formula buttons */
+    .math-btn {
+      padding: 8px 12px;
+      border: 2px solid #667eea;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+      margin: 4px;
+    }
+    .math-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(102,126,234,0.4);
+    }
+
+    .cognia-badges {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 10000;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .cognia-badges img {
+        height: 70px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+    }
+
+    .cognia-badges img:hover {
+        transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="cognia-badges">
+    <img src="{{ url_for('static', filename='1.png') }}" alt="Cognia System of Distinction">
+    <img src="{{ url_for('static', filename='Cognia.png') }}" alt="Cognia Accredited">
+  </div>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="ط§ظ„ط´ط¹ط§ط±" style="position:fixed; top:14px; right:14px; height:120px; z-index:9999">
+  <h2>â‍• ط¥ط¶ط§ظپط© ط£ط³ط¦ظ„ط© ظ„ظ„ط§ظ…طھط­ط§ظ†</h2>
+  {% with msgs = get_flashed_messages() %}
+    {% if msgs %}
+      <div style="max-width:600px;margin:10px auto 14px auto;background:#e9fbe9;color:#155724;border:1px solid #c3e6cb;padding:10px 14px;border-radius:10px;text-align:right;font-weight:700">
+        {{ msgs[-1] }}
+      </div>
+    {% endif %}
+  {% endwith %}
+  
+  <div class="exam-info" style="max-width:800px;margin:20px auto;background:#e3f2fd;padding:15px;border-radius:10px">
+    <h3 style="margin:0 0 10px 0;color:#1565c0">ًں“‌ ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„ط§ظ…طھط­ط§ظ†:</h3>
+    <p style="margin:5px 0;font-size:16px"><strong>ط§ظ„ط¹ظ†ظˆط§ظ†:</strong> {{ exam['title'] }}</p>
+    <p style="margin:5px 0;font-size:16px"><strong>ط§ظ„ظ…ط§ط¯ط©:</strong> {{ exam['subject'] }}</p>
+    <p style="margin:5px 0;font-size:16px"><strong>ط§ظ„طµظپ:</strong> {{ exam['grade'] }}</p>
+    <p style="margin:5px 0;font-size:16px"><strong>ط§ظ„ظ†ظ…ظˆط°ط¬:</strong> {{ exam['model_id'] }}</p>
+    <p style="margin:5px 0;font-size:16px"><strong>ط§ظ„ظƒظˆط¯:</strong> {{ exam['code'] }}</p>
+  </div>
+
+  <a href="{{ url_for('admin_dashboard') }}" style="display:inline-block;padding:10px 20px;background:#f44336;color:white;text-decoration:none;border-radius:8px;margin-bottom:20px">ًںڈ  ط§ظ„ط¹ظˆط¯ط© ظ„ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</a>
+
+  <form id="questionForm" method="post" enctype="multipart/form-data" action="{{ url_for('admin_add_question_to_exam', exam_id=exam['id']) }}">
+    <input type="hidden" name="subject" value="{{ exam['subject'] }}">
+
+    <select name="type" id="qtype" required>
+      <option value="ط§ط®طھظٹط§ط±ظٹ">ط§ط®طھظٹط§ط±ظٹ</option>
+      <option value="ظ…ظ‚ط§ظ„ظٹ">ظ…ظ‚ط§ظ„ظٹ</option>
+      <option value="طµط­ ط£ظˆ ط®ط·ط£">طµط­ ط£ظˆ ط®ط·ط£</option>
+      <option value="طµظˆط±ط©">ط³ط¤ط§ظ„ ط¨طµظˆط±ط©</option>
+    </select>
+
+    <div id="essay_warning" style="display:none; text-align:right; font-size:14px; color:#856404; margin-top:8px; margin-bottom:10px; padding:12px; background:#fff3cd; border-radius:8px; border-right:4px solid #ffc107">
+      <strong>âڑ ï¸ڈ طھظ†ط¨ظٹظ‡:</strong> ط§ظ„ط£ط³ط¦ظ„ط© ط§ظ„ظ…ظ‚ط§ظ„ظٹط© طھط­طھط§ط¬ ط¥ظ„ظ‰ طھطµط­ظٹط­ ظٹط¯ظˆظٹ ظˆظ„ط§ ظٹطھظ… ط­ط³ط§ط¨ظ‡ط§ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظپظٹ ط§ظ„ظ†طھط§ط¦ط¬
+    </div>
+
+    <div style="margin-bottom:15px">
+      <label style="display:block; text-align:right; margin-bottom:8px; font-weight:bold; color:#333">ظ†طµ ط§ظ„ط³ط¤ط§ظ„: <span style="color:red">*</span></label>
+      <!-- Quill Editor will be inserted here -->
+      <div id="questionEditor" style="margin-bottom:15px; border:1px solid #ccc; border-radius:8px"></div>
+      <textarea id="questionText" name="question" style="display:none"></textarea>
+      
+      <!-- Quick Math Formula Buttons -->
+      <div style="margin-top:10px; padding:10px; background:#f9f9f9; border-radius:8px; border:1px solid #667eea">
+        <div style="text-align:right; margin-bottom:8px; font-size:14px; color:#333; font-weight:bold">
+          ًں’، ظƒطھط§ط¨ط© ط§ظ„ظ…ط¹ط§ط¯ظ„ط§طھ ط§ظ„ط±ظٹط§ط¶ظٹط©:
+        </div>
+        <div style="text-align:right; margin-bottom:10px; font-size:13px; color:#666; padding:8px; background:#fff; border-radius:5px; border-right:3px solid #667eea">
+          <strong>ط§ظ„ط·ط±ظٹظ‚ط© 1:</strong> ط§ط³طھط®ط¯ظ… ط§ظ„ط£ط²ط±ط§ط± ط£ط¯ظ†ط§ظ‡ ظ„ط¥ط¶ط§ظپط© ط§ظ„ظ…ط¹ط§ط¯ظ„ط§طھ ط§ظ„ط´ط§ط¦ط¹ط©<br>
+          <strong>ط§ظ„ط·ط±ظٹظ‚ط© 2:</strong> ط§ط¶ط؛ط· ط¹ظ„ظ‰ ط²ط± âں¨f(x)âں© ظپظٹ ط´ط±ظٹط· ط§ظ„ط£ط¯ظˆط§طھ ط£ط¹ظ„ظ‰ ط§ظ„ظ…ط­ط±ط± ظ„ظƒطھط§ط¨ط© ظ…ط¹ط§ط¯ظ„ط© ظ…ط®طµطµط©<br>
+          <strong>ط§ظ„ط·ط±ظٹظ‚ط© 3:</strong> ط§ظƒطھط¨ ظ…ط¹ط§ط¯ظ„ط© ظ…ط¨ط§ط´ط±ط© ط¨طµظٹط؛ط© LaTeX (ظ…ط«ط§ظ„: x^2 ظ„ظ„ط£ط³طŒ frac{a}{b} ظ„ظ„ظƒط³ط±)
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end">
+        <button type="button" class="math-btn" onclick="insertFormula('x^2')" title="ط£ط³ ظ…ط±ط¨ط¹">xآ²</button>
+        <button type="button" class="math-btn" onclick="insertFormula('x^3')" title="ط£ط³ طھظƒط¹ظٹط¨ظٹ">xآ³</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\frac{a}{b}')" title="ظƒط³ط±">a/b</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\sqrt{x}')" title="ط¬ط°ط±">âˆڑx</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\sqrt[n]{x}')" title="ط¬ط°ط± ظ†ظˆظ†ظٹ">âپ؟âˆڑx</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\int_{a}^{b}')" title="طھظƒط§ظ…ظ„">âˆ«</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\sum_{i=1}^{n}')" title="ظ…ط¬ظ…ظˆط¹">âˆ‘</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\pi')" title="ط¨ط§ظٹ">د€</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\alpha')" title="ط£ظ„ظپط§">خ±</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\beta')" title="ط¨ظٹطھط§">خ²</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\leq')" title="ط£طµط؛ط± ط£ظˆ ظٹط³ط§ظˆظٹ">â‰¤</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\geq')" title="ط£ظƒط¨ط± ط£ظˆ ظٹط³ط§ظˆظٹ">â‰¥</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\neq')" title="ظ„ط§ ظٹط³ط§ظˆظٹ">â‰ </button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\infty')" title="ط§ظ„ظ„ط§ظ†ظ‡ط§ظٹط©">âˆ‍</button>
+        <button type="button" class="math-btn" onclick="insertFormula('\\pm')" title="ط²ط§ط¦ط¯ ط£ظˆ ظ†ط§ظ‚طµ">آ±</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mcq">
+      <input type="text" name="option1" placeholder="ط§ظ„ط®ظٹط§ط± 1 (ظ„ظ„ط§ط®طھظٹط§ط±ظٹ ظپظ‚ط·)">
+      <input type="text" name="option2" placeholder="ط§ظ„ط®ظٹط§ط± 2">
+      <input type="text" name="option3" placeholder="ط§ظ„ط®ظٹط§ط± 3">
+      <input type="text" name="option4" placeholder="ط§ظ„ط®ظٹط§ط± 4">
+      <input type="text" name="answer" placeholder="ط§ظ„ط¥ط¬ط§ط¨ط© ط§ظ„طµط­ظٹط­ط© (ظ„ظ„ط§ط®طھظٹط§ط±ظٹ ط£ظˆ طµط­ ط£ظˆ ط®ط·ط£)">
+    </div>
+
+    <div id="tfq" style="display:none">
+      <select name="answer_tf" style="width:95%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px">
+        <option value="">ط§ط®طھط± ط§ظ„ط¥ط¬ط§ط¨ط© ط§ظ„طµط­ظٹط­ط©</option>
+        <option value="طµط­">طµط­</option>
+        <option value="ط®ط·ط£">ط®ط·ط£</option>
+      </select>
+    </div>
+
+    <div id="imgq" style="display:none">
+      <input type="file" name="image" accept="image/*">
+      <div style="font-size:13px;color:#666">ط§ط±ظپط¹ طµظˆط±ط© ط§ظ„ط³ط¤ط§ظ„ (ط³ظٹطھظ… ط­ظپط¸ظ‡ط§ ط¯ط§ط®ظ„ static/uploads)</div>
+    </div>
+    <button type="submit">âœ… ط­ظپط¸ ط§ظ„ط³ط¤ط§ظ„</button>
+  </form>
+
+  {% if questions %}
+  <div style="max-width:800px;margin:30px auto;background:#fff;padding:20px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.1);border:1px solid #e0e0e0">
+    <h3 style="color:#333;margin-top:0">ًں“‹ ط§ظ„ط£ط³ط¦ظ„ط© ط§ظ„ظ…ظˆط¬ظˆط¯ط© ({{ questions|length }})</h3>
+    <div style="text-align:right; max-height:400px; overflow-y:auto">
+      {% for q in questions %}
+      <div style="border:1px solid #ddd;padding:15px;margin:10px 0;border-radius:8px; background:#f9f9f9; position:relative">
+        <div style="display:flex; justify-content:space-between; align-items:start; gap:15px">
+          <div style="flex:1">
+            <p style="margin:0; font-size:16px; font-weight:bold; color:#333">
+              #{{ q['id'] }} - {{ q['subject'] }} - {{ q['type'] }}
+            </p>
+            <div style="margin-top:8px; padding:10px; background:white; border-radius:6px; border:1px solid #e0e0e0">
+              <div style="font-size:14px; color:#555; text-align:right" id="question_{{ q['id'] }}"></div>
+            </div>
+            <script>
+              document.getElementById('question_{{ q['id'] }}').innerHTML = {{ q['question']|tojson|safe }};
+              if(window.MathJax && window.MathJax.typesetPromise){ window.MathJax.typesetPromise([document.getElementById('question_{{ q['id'] }}')]); }
+            </script>
+            {% if q['image_path'] %}
+            <div style="margin-top:8px">
+              <img src="{{ url_for('static', filename=q['image_path']) }}" alt="طµظˆط±ط© ط§ظ„ط³ط¤ط§ظ„" style="max-width:200px; border-radius:6px; border:1px solid #ddd">
+            </div>
+            {% endif %}
+            {% if q['type'] == 'ط§ط®طھظٹط§ط±ظٹ' or q['type'] == 'طµط­ ط£ظˆ ط®ط·ط£' or q['type'] == 'طµظˆط±ط©' %}
+            <div style="margin-top:8px; font-size:13px; color:#666">
+              <strong>ط§ظ„ط¥ط¬ط§ط¨ط© ط§ظ„طµط­ظٹط­ط©:</strong> {{ q['answer'] }}
+            </div>
+            {% endif %}
+          </div>
+          <form method="POST" action="{{ url_for('admin_delete_question', question_id=q['id']) }}" style="margin:0" onsubmit="return confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط­ط°ظپ ظ‡ط°ط§ ط§ظ„ط³ط¤ط§ظ„طں');">
+            <button type="submit" style="background:#ff4444;color:white;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:bold;white-space:nowrap">
+              ًں—‘ï¸ڈ ط­ط°ظپ
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Quill and Formula Libraries -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill-formula@1.0.6/dist/quill.formula.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Quill Editor with Formula Support
+      var quill = new Quill('#questionEditor', {
+        theme: 'snow',
+        modules: {
+          formula: true,
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline', 'strike'],
+              ['blockquote', 'code-block'],
+              [{ 'header': 1 }, { 'header': 2 }],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'script': 'sub'}, { 'script': 'super' }],
+              [{ 'indent': '-1'}, { 'indent': '+1' }],
+              [{ 'direction': 'rtl' }],
+              [{ 'size': ['small', false, 'large', 'huge'] }],
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+              [{ 'color': [] }, { 'background': [] }],
+              [{ 'font': [] }],
+              [{ 'align': [] }],
+              ['clean'],
+              ['formula'],
+              ['link', 'image']
+            ]
+          }
+        },
+        placeholder: 'ط§ظƒطھط¨ ظ†طµ ط§ظ„ط³ط¤ط§ظ„ ظ‡ظ†ط§... ظٹظ…ظƒظ†ظƒ ط§ط³طھط®ط¯ط§ظ… ط§ظ„ظ…ط¹ط§ط¯ظ„ط§طھ ط§ظ„ط±ظٹط§ط¶ظٹط© ط¨ط§ط³طھط®ط¯ط§ظ… ط²ط± ط§ظ„طµظٹط؛ط© ط§ظ„ط±ظٹط§ط¶ظٹط©'
+      });
+
+      // Sync Quill content to hidden textarea on form submit
+      var form = document.getElementById('questionForm');
+      var hiddenInput = document.getElementById('questionText');
+      
+      if(form && quill){
+        form.addEventListener('submit', function(e){
+          // Get the HTML content from Quill
+          var content = quill.root.innerHTML;
+          hiddenInput.value = content;
+          
+          // Check if content is empty
+          if(!content || content.trim() === '' || content === '<p><br></p>'){
+            e.preventDefault();
+            alert('ظٹط±ط¬ظ‰ ط¥ط¯ط®ط§ظ„ ظ†طµ ط§ظ„ط³ط¤ط§ظ„');
+            quill.focus();
+            return false;
+          }
+        });
+      } else {
+        console.error('Form or Quill not found');
+      }
+
+      // Function to insert formula using Quill formula module - simplified version
+      window.insertFormula = function(formula) {
+        try {
+          // Get current cursor position
+          var range = quill.getSelection(true);
+          if (!range) {
+            range = { index: quill.getLength() - 1, length: 0 };
+          }
+          
+          // Insert the formula directly at cursor position
+          quill.insertEmbed(range.index, 'formula', formula, 'user');
+          
+          // Move cursor after the inserted formula
+          quill.setSelection(range.index + 1);
+        } catch (error) {
+          console.error('Error inserting formula:', error);
+          // Fallback: open formula editor
+          var formulaButton = quill.getModule('toolbar').container.querySelector('.ql-formula');
+          if(formulaButton) {
+            formulaButton.click();
+            setTimeout(function() {
+              var formulaInput = document.querySelector('.ql-formula-editor input');
+              if(formulaInput) {
+                formulaInput.value = formula;
+                var event = new Event('input', { bubbles: true });
+                formulaInput.dispatchEvent(event);
+              }
+            }, 100);
+          }
+        }
+      };
+    });
+  </script>
+  
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  
+  <script>
+    (function(){
+      var sel = document.getElementById('qtype');
+      var mcq = document.getElementById('mcq');
+      var tfq = document.getElementById('tfq');
+      var imgq = document.getElementById('imgq');
+      var essayWarning = document.getElementById('essay_warning');
+      function apply(){
+        var v = sel.value;
+        mcq.style.display = (v === 'ط§ط®طھظٹط§ط±ظٹ' || v === 'طµظˆط±ط©') ? 'block' : 'none';
+        tfq.style.display = (v === 'طµط­ ط£ظˆ ط®ط·ط£') ? 'block' : 'none';
+        imgq.style.display = (v === 'طµظˆط±ط©') ? 'block' : 'none';
+        essayWarning.style.display = (v === 'ظ…ظ‚ط§ظ„ظٹ') ? 'block' : 'none';
+      }
+      sel.addEventListener('change', apply);
+      apply();
+    })();
+  </script>
+  <div style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#333; padding:10px; background:#f9f9f9; z-index:9999; border-top:1px solid #e0e0e0">
+    طھطµظ…ظٹظ… ظ‚ط³ظ… ط§ظ„ط­ط§ط³ط¨ ط§ظ„ط¢ظ„ظ‰ ط¨ظ…ط¯ط§ط±ط³ ط§ظ„ط£ظ†ط¬ط§ظ„ ط§ظ„ط£ظ‡ظ„ظٹط©آ©
+  </div>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>إضافة سؤال</title>
+  <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <!-- quill-formula -->
+  <link href="https://cdn.jsdelivr.net/npm/quill-formula@1.0.6/dist/quill.formula.min.css" rel="stylesheet">
+  <!-- MathJax for Math Preview -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    body{font-family:"Cairo",sans-serif;background:#ffffff;margin:0;padding:20px;text-align:center}
+    h2{color:#333}
+    form{background:#fff;padding:20px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.1);max-width:800px;margin:auto;border:1px solid #e0e0e0}
+    input,select{width:95%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
+    button{background:linear-gradient(90deg,#667eea,#764ba2);color:#fff;padding:12px 18px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+    
+    /* Custom Quill Styles */
+    .ql-container {
+      font-family: "Cairo", sans-serif;
+      font-size: 16px;
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .ql-editor {
+      min-height: 200px;
+      direction: rtl;
+    }
+    
+    .ql-toolbar {
+      direction: rtl;
+      text-align: right;
+    }
+    
+    /* Custom button styles for formula buttons */
+    .math-btn {
+      padding: 10px 14px;
+      border: 2px solid #667eea;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 4px;
+      box-shadow: 0 2px 5px rgba(102,126,234,0.2);
+      min-width: 50px;
+    }
+    .math-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(102,126,234,0.5);
+      background: linear-gradient(135deg, #764ba2, #667eea);
+    }
+    .math-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(102,126,234,0.3);
+    }
+    
+    /* Math Preview Box */
+    .math-preview {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      min-height: 60px;
+      text-align: right;
+      direction: rtl;
+    }
+    .math-preview-label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #667eea;
+      font-size: 14px;
+    }
+    .math-preview-content {
+      padding: 10px;
+      background: #fff;
+      border-radius: 5px;
+      min-height: 40px;
+      border: 1px solid #ddd;
+    }
+    .math-preview-content:empty::before {
+      content: "سيظهر معاينة المعادلات الرياضية هنا...";
+      color: #999;
+      font-style: italic;
+    }
+    
+    /* Collapsible Math Sections */
+    .math-section-header {
+      cursor: pointer;
+      padding: 12px 15px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .math-section-header:hover {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+      transform: translateX(-3px);
+    }
+    .math-section-header::after {
+      content: "▼";
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    .math-section-header.collapsed::after {
+      content: "▶";
+      transform: rotate(-90deg);
+    }
+    .math-section-content {
+      max-height: 500px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .math-section-content.collapsed {
+      max-height: 0;
+      padding: 0 12px;
+      margin-bottom: 0;
+    }
+    
+    /* Custom Math Formula Button */
+    .custom-formula-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      margin: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .custom-formula-btn:hover {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.6);
+    }
+    .custom-formula-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="الشعار" style="position:fixed; top:14px; right:14px; height:120px; z-index:9999">
+  <h2>➕ إضافة سؤال جديد</h2>
+  {% with msgs = get_flashed_messages() %}
+    {% if msgs %}
+      <div style="max-width:600px;margin:10px auto 14px auto;background:#e9fbe9;color:#155724;border:1px solid #c3e6cb;padding:10px 14px;border-radius:10px;text-align:right;font-weight:700">
+        {{ msgs[-1] }}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <form id="questionForm" method="post" enctype="multipart/form-data">
+    <select name="model_id" required>
+      <option value="">اختر النموذج</option>
+      {% if models %}
+        {% for m in models %}
+          <option value="{{ m['id'] }}">{{ m['name'] }} {% if m['grade'] %}({{ m['grade'] }}){% endif %}</option>
+        {% endfor %}
+      {% endif %}
+    </select>
+
+    <select name="grade" required>
+      <option value="">اختر الصف</option>
+      <option value="الصف الرابع">الصف الرابع</option>
+      <option value="الصف الخامس">الصف الخامس</option>
+      <option value="الصف السادس">الصف السادس</option>
+      <option value="الصف الأول المتوسط">الصف الأول المتوسط</option>
+      <option value="الصف الثاني المتوسط">الصف الثاني المتوسط</option>
+      <option value="الصف الثالث المتوسط">الصف الثالث المتوسط</option>
+      <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+      <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+      <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+    </select>
+
+    <select name="subject" required>
+      <option value="">اختر المادة</option>
+      <option value="رياضيات">رياضيات</option>
+      <option value="لغة عربية">لغة عربية</option>
+      <option value="علوم">علوم</option>
+      <option value="لغة إنجليزية">لغة إنجليزية</option>
+    </select>
+
+    <select name="type" id="qtype" required>
+      <option value="اختياري">اختياري</option>
+      <option value="مقالي">مقالي</option>
+      <option value="صح أو خطأ">صح أو خطأ</option>
+      <option value="صورة">سؤال بصورة</option>
+    </select>
+
+    <div id="essay_warning" style="display:none; text-align:right; font-size:14px; color:#856404; margin-top:8px; margin-bottom:10px; padding:12px; background:#fff3cd; border-radius:8px; border-right:4px solid #ffc107">
+      <strong>ملاحظة مهمة:</strong> لن يتم تقييم الأسئلة المقالية تلقائياً وسيتم تقييمها يدوياً من قبل المشرف
+    </div>
+
+    <div style="margin-bottom:15px">
+      <label style="display:block; text-align:right; margin-bottom:8px; font-weight:bold; color:#333">نص السؤال: <span style="color:red">*</span></label>
+      <!-- Custom Formula Button -->
+      <div style="text-align:right; margin-bottom:10px">
+        <button type="button" class="custom-formula-btn" id="customFormulaBtn" onclick="toggleMathFormulas()">
+          🧮 إظهار المعادلات الرياضية المتاحة
+        </button>
+      </div>
+      <!-- Quill Editor will be inserted here -->
+      <div id="questionEditor" style="margin-bottom:15px; border:1px solid #ccc; border-radius:8px"></div>
+      <textarea id="questionText" name="question" style="display:none"></textarea>
+      
+      <!-- Math Preview Box -->
+      <div class="math-preview">
+        <span class="math-preview-label">📐 معاينة المعادلات الرياضية:</span>
+        <div id="mathPreviewContent" class="math-preview-content"></div>
+      </div>
+      
+      <!-- Advanced Math Formula Editor - Collapsible List (Hidden by default) -->
+      <div id="mathFormulasContainer" style="display:none; margin-top:15px; padding:10px; background:#ffffff; border-radius:10px; border:2px solid #667eea; box-shadow:0 4px 12px rgba(102,126,234,0.15)">
+        <div style="text-align:right; margin-bottom:10px; font-size:16px; color:#667eea; font-weight:bold; border-bottom:2px solid #667eea; padding-bottom:8px; display:flex; justify-content:space-between; align-items:center">
+          <span>📐 محرر المعادلات الرياضية</span>
+          <button type="button" onclick="toggleAllMathSections()" style="background:#667eea; color:#fff; border:none; padding:5px 12px; border-radius:5px; cursor:pointer; font-size:12px">عرض/إخفاء الكل</button>
+        </div>
+        
+        <!-- Fractions Section -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('fractions')">🔢 الكسور</div>
+          <div id="fractions" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\frac{a}{b}')" title="كسر بسيط">a/b</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\frac{x+1}{x-1}')" title="كسر بحدود">(x+1)/(x-1)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\frac{d}{dx}')" title="مشتقة">d/dx</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\frac{\\partial}{\\partial x}')" title="مشتقة جزئية">∂/∂x</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Roots Section -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('roots')">√ الجذور</div>
+          <div id="roots" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\sqrt{x}')" title="جذر تربيعي">√x</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\sqrt[n]{x}')" title="جذر نوني">ⁿ√x</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\sqrt{x^2+y^2}')" title="جذر مجموع">√(x²+y²)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\sqrt[3]{x}')" title="جذر تكعيبي">³√x</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Powers and Subscripts -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('powers')">^ الأسس واللواحق</div>
+          <div id="powers" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('x^2')" title="أس مربع">x²</button>
+              <button type="button" class="math-btn" onclick="insertFormula('x^3')" title="أس تكعيبي">x³</button>
+              <button type="button" class="math-btn" onclick="insertFormula('x^n')" title="أس نوني">xⁿ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('a_{n}')" title="لاحق">aₙ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('x_{i,j}')" title="لاحق مزدوج">xᵢ,ⱼ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('e^{-x}')" title="أس سالب">e⁻ˣ</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integrals and Sums -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('integrals')">∫ التكاملات والمجاميع</div>
+          <div id="integrals" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\int f(x)dx')" title="تكامل غير محدد">∫ f(x)dx</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\int_{a}^{b} f(x)dx')" title="تكامل محدد">∫ₐᵇ f(x)dx</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\sum_{i=1}^{n}')" title="مجموع">∑ᵢ₌₁ⁿ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\prod_{i=1}^{n}')" title="جداء">∏ᵢ₌₁ⁿ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\oint')" title="تكامل دائري">∮</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Greek Letters -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('greek')">α الحروف اليونانية</div>
+          <div id="greek" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\alpha')" title="ألفا">α</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\beta')" title="بيتا">β</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\gamma')" title="غاما">γ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\delta')" title="دلتا">δ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\pi')" title="باي">π</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\theta')" title="ثيتا">θ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\lambda')" title="لامدا">λ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\mu')" title="مو">μ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\sigma')" title="سيجما">σ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\phi')" title="فاي">φ</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\omega')" title="أوميغا">ω</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\Delta')" title="دلتا كبيرة">Δ</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operators -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('operators')">⚡ المشغّلات والرموز</div>
+          <div id="operators" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\leq')" title="أصغر أو يساوي">≤</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\geq')" title="أكبر أو يساوي">≥</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\neq')" title="لا يساوي">≠</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\approx')" title="تقريباً">≈</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\pm')" title="زائد أو ناقص">±</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\times')" title="ضرب">×</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\div')" title="قسمة">÷</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\infty')" title="اللانهاية">∞</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\nabla')" title="نابلا">∇</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\partial')" title="جزئي">∂</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\in')" title="ينتمي">∈</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\notin')" title="لا ينتمي">∉</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Functions -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('functions')">📊 الدوال</div>
+          <div id="functions" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\sin(x)')" title="جيب">sin(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\cos(x)')" title="جيب تمام">cos(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\tan(x)')" title="ظل">tan(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\log(x)')" title="لوغاريتم">log(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\ln(x)')" title="لوغاريتم طبيعي">ln(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\exp(x)')" title="العدد النيبيري">exp(x)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\lim_{x \\to a}')" title="نهاية">lim x→a</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matrices and Vectors -->
+        <div>
+          <div class="math-section-header" onclick="toggleMathSection('matrices')">📐 المصفوفات والمتجهات</div>
+          <div id="matrices" class="math-section-content collapsed">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button type="button" class="math-btn" onclick="insertFormula('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}')" title="مصفوفة 2x2">(a b; c d)</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\vec{v}')" title="متجه">v⃗</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\cdot')" title="نقطة">·</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\times')" title="ضرب متجهي">×</button>
+              <button type="button" class="math-btn" onclick="insertFormula('\\|v\\|')" title="طول المتجه">||v||</button>
+            </div>
+          </div>
+        </div>
+
+                <!-- Additional Instructions -->
+        <div style="text-align:right; margin-top:10px; padding:10px; background:#fff; border-radius:6px; border:1px dashed #667eea; font-size:12px; color:#666">
+          <strong>💡 نصائح:</strong> انقر على أي قسم أعلاه لعرض المعادلات • لتعديل معادلة موجودة: انقر مرتين عليها • مثال: <code>x^2 + y^2 = r^2</code>
+        </div>
+      </div>
+
+    <div id="mcq">
+      <input type="text" name="option1" placeholder="الخيار 1 (للاختياري فقط)">
+      <input type="text" name="option2" placeholder="الخيار 2">
+      <input type="text" name="option3" placeholder="الخيار 3">
+      <input type="text" name="option4" placeholder="الخيار 4">
+      <input type="text" name="answer" placeholder="الإجابة الصحيحة (للاختياري أو صح أو خطأ)">
+    </div>
+
+    <div id="tfq" style="display:none">
+      <select name="answer_tf" style="width:95%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px">
+        <option value="">اختر الإجابة الصحيحة</option>
+        <option value="صح">صح</option>
+        <option value="خطأ">خطأ</option>
+      </select>
+    </div>
+
+    <div id="imgq" style="display:none">
+      <input type="file" name="image" accept="image/*">
+      <div style="font-size:13px;color:#666">ارفع صورة السؤال (سيتم حفظها داخل static/uploads)</div>
+    </div>
+    <button type="submit">✅ حفظ السؤال</button>
+  </form>
+  <!-- Quill and Formula Libraries -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill-formula@1.0.6/dist/quill.formula.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Quill Editor with Formula Support
+      var quill = new Quill('#questionEditor', {
+        theme: 'snow',
+        modules: {
+          formula: true,
+          toolbar: {
+            container: [
+              ['formula'],
+              [{ 'size': [] }, { 'font': [] }],
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'color': [] }, { 'background': [] }],
+              [{ 'script': 'sub'}, { 'script': 'super' }],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'indent': '-1'}, { 'indent': '+1' }],
+              [{ 'align': [] }],
+              [{ 'direction': 'rtl' }],
+              ['blockquote', 'code-block'],
+              ['link', 'image'],
+              ['clean']
+            ]
+          }
+        },
+        placeholder: 'اكتب نص السؤال هنا... يمكنك استخدام المعادلات الرياضية باستخدام زر الصيغة الرياضية'
+      });
+      
+      // Store quill instance globally
+      window.quillInstance = quill;
+      
+      // Function to toggle math formulas container
+      window.toggleMathFormulas = function() {
+        var container = document.getElementById('mathFormulasContainer');
+        var btn = document.getElementById('customFormulaBtn');
+        if (container && btn) {
+          if (container.style.display === 'none') {
+            container.style.display = 'block';
+            btn.innerHTML = '🧮 إخفاء المعادلات الرياضية';
+          } else {
+            container.style.display = 'none';
+            btn.innerHTML = '🧮 إظهار المعادلات الرياضية المتاحة';
+          }
+        }
+      };
+      
+      // Function to open formula editor
+      window.openFormulaEditor = function() {
+        try {
+          var formulaBtn = quill.getModule('toolbar').container.querySelector('.ql-formula');
+          if (formulaBtn) {
+            // Listen for formula editor save event
+            setTimeout(function() {
+              var formulaInput = document.querySelector('.ql-formula-editor input');
+              if (formulaInput) {
+                var saveBtn = document.querySelector('.ql-formula-editor button');
+                var handleSave = function() {
+                  setTimeout(function() {
+                    if (typeof updateMathPreview === 'function') {
+                      updateMathPreview();
+                    }
+                  }, 200);
+                  if (saveBtn) {
+                    saveBtn.removeEventListener('click', handleSave);
+                  }
+                  if (formulaInput) {
+                    formulaInput.removeEventListener('keydown', handleKeydown);
+                  }
+                };
+                var handleKeydown = function(e) {
+                  if (e.key === 'Enter') {
+                    handleSave();
+                  }
+                };
+                if (saveBtn) {
+                  saveBtn.addEventListener('click', handleSave);
+                }
+                formulaInput.addEventListener('keydown', handleKeydown);
+              }
+            }, 100);
+            formulaBtn.click();
+          } else {
+            // Fallback: insert formula directly
+            var range = quill.getSelection(true);
+            if (!range) {
+              range = { index: quill.getLength() - 1, length: 0 };
+            }
+            var formula = prompt('أدخل المعادلة بصيغة LaTeX (مثال: x^2 + y^2 = r^2):', '');
+            if (formula) {
+              quill.insertEmbed(range.index, 'formula', formula, 'user');
+              quill.setSelection(range.index + 1);
+              setTimeout(function() {
+                if (typeof updateMathPreview === 'function') {
+                  updateMathPreview();
+                }
+              }, 300);
+            }
+          }
+        } catch (error) {
+          console.error('Error opening formula editor:', error);
+          alert('حدث خطأ في فتح محرر المعادلات. حاول مرة أخرى.');
+        }
+      };
+      
+      // Also handle formula button in toolbar
+      setTimeout(function() {
+        var formulaBtn = quill.getModule('toolbar').container.querySelector('.ql-formula');
+        if (formulaBtn) {
+          formulaBtn.addEventListener('click', function() {
+            setTimeout(function() {
+              var formulaInput = document.querySelector('.ql-formula-editor input');
+              if (formulaInput) {
+                var saveBtn = document.querySelector('.ql-formula-editor button');
+                var handleSave = function() {
+                  setTimeout(function() {
+                    if (typeof updateMathPreview === 'function') {
+                      updateMathPreview();
+                    }
+                  }, 200);
+                };
+                var handleKeydown = function(e) {
+                  if (e.key === 'Enter') {
+                    handleSave();
+                  }
+                };
+                if (saveBtn) {
+                  saveBtn.addEventListener('click', handleSave);
+                }
+                formulaInput.addEventListener('keydown', handleKeydown);
+              }
+            }, 100);
+          });
+        }
+      }, 300);
+
+      // Sync Quill content to hidden textarea on form submit
+      var form = document.getElementById('questionForm');
+      var hiddenInput = document.getElementById('questionText');
+      
+      if(form && quill){
+        form.addEventListener('submit', function(e){
+          // Get the HTML content from Quill
+          var content = quill.root.innerHTML;
+          hiddenInput.value = content;
+          
+          // Check if content is empty
+          if(!content || content.trim() === '' || content === '<p><br></p>'){
+            e.preventDefault();
+            alert('يرجى إدخال نص السؤال');
+            quill.focus();
+            return false;
+          }
+        });
+      } else {
+        console.error('Form or Quill not found');
+      }
+
+      // Functions to toggle math sections
+      window.toggleMathSection = function(sectionId) {
+        var section = document.getElementById(sectionId);
+        var header = section.previousElementSibling;
+        if (section) {
+          section.classList.toggle('collapsed');
+          header.classList.toggle('collapsed');
+        }
+      };
+      
+      window.toggleAllMathSections = function() {
+        var allSections = ['fractions', 'roots', 'powers', 'integrals', 'greek', 'operators', 'functions', 'matrices'];
+        var allCollapsed = allSections.every(function(id) {
+          var section = document.getElementById(id);
+          return section && section.classList.contains('collapsed');
+        });
+        
+        allSections.forEach(function(id) {
+          var section = document.getElementById(id);
+          var header = section ? section.previousElementSibling : null;
+          if (section && header) {
+            if (allCollapsed) {
+              section.classList.remove('collapsed');
+              header.classList.remove('collapsed');
+            } else {
+              section.classList.add('collapsed');
+              header.classList.add('collapsed');
+            }
+          }
+        });
+      };
+      
+      // Function to insert formula using Quill formula module
+      window.insertFormula = function(formula) {
+        try {
+          // Get current cursor position
+          var range = quill.getSelection(true);
+          if (!range) {
+            range = { index: quill.getLength() - 1, length: 0 };
+          }
+          
+          // Insert the formula directly at cursor position
+          quill.insertEmbed(range.index, 'formula', formula, 'user');
+          
+          // Move cursor after the inserted formula
+          quill.setSelection(range.index + 1);
+          
+          // Update preview after inserting formula
+          setTimeout(updateMathPreview, 300);
+        } catch (error) {
+          console.error('Error inserting formula:', error);
+          // Fallback: open formula editor
+          var formulaButton = quill.getModule('toolbar').container.querySelector('.ql-formula');
+          if (formulaButton) {
+            formulaButton.click();
+            setTimeout(function() {
+              var formulaInput = document.querySelector('.ql-formula-editor input');
+              if (formulaInput) {
+                formulaInput.value = formula;
+                formulaInput.select();
+              }
+            }, 150);
+          }
+        }
+      };
+      
+      // Function to edit formula by finding it using Quill API
+      function editFormulaAtElement(formulaElement) {
+        try {
+          // First try to extract LaTeX from the DOM element
+          var targetFormula = '';
+          
+          // Try to find .ql-formula container if clicked element is inside it
+          var formulaContainer = formulaElement.closest('.ql-formula');
+          if (formulaContainer) {
+            formulaElement = formulaContainer;
+          }
+          var annotation = formulaElement.querySelector('annotation[encoding="application/x-tex"]');
+          if (annotation) {
+            targetFormula = annotation.textContent || annotation.innerText;
+          }
+          
+          // If not found in annotation, try data attribute
+          if (!targetFormula) {
+            targetFormula = formulaElement.getAttribute('data-value') || '';
+          }
+          
+          // Use Quill API to find the blot and get index
+          var blot = Quill.find(formulaElement);
+          var formulaIndex = -1;
+          
+          if (blot) {
+            try {
+              formulaIndex = quill.getIndex(blot);
+            } catch (e) {
+              // If getIndex fails, try to find it manually
+            }
+          }
+          
+          // If we couldn't get index from blot, find it manually
+          if (formulaIndex < 0) {
+            // Find all formulas and match by DOM element
+            var delta = quill.getContents();
+            var formulaCount = 0;
+            var allFormulas = quill.root.querySelectorAll('.ql-formula');
+            
+            for (var i = 0; i < allFormulas.length; i++) {
+              if (allFormulas[i] === formulaElement || allFormulas[i].contains(formulaElement)) {
+                // Count characters before this formula
+                var charIndex = 0;
+                for (var j = 0; j < delta.ops.length; j++) {
+                  var op = delta.ops[j];
+                  if (op.insert) {
+                    if (op.insert.formula) {
+                      if (formulaCount === i) {
+                        formulaIndex = charIndex;
+                        // Also get formula from delta if we don't have it
+                        if (!targetFormula) {
+                          targetFormula = op.insert.formula;
+                        }
+                        break;
+                      }
+                      formulaCount += 1;
+                      charIndex += 1;
+                    } else if (typeof op.insert === 'string') {
+                      charIndex += op.insert.length;
+                    }
+                  }
+                }
+                break;
+              }
+              formulaCount += 1;
+            }
+          }
+          
+          // If still no formula, try to extract from delta
+          if (!targetFormula) {
+            var delta = quill.getContents();
+            var formulaCount = 0;
+            var charIndex = 0;
+            
+            for (var i = 0; i < delta.ops.length; i++) {
+              var op = delta.ops[i];
+              if (op.insert && op.insert.formula) {
+                if (formulaIndex >= 0 && charIndex === formulaIndex) {
+                  targetFormula = op.insert.formula;
+                  break;
+                }
+                if (formulaIndex < 0) {
+                  var allFormulas = quill.root.querySelectorAll('.ql-formula');
+                  if (formulaCount < allFormulas.length && allFormulas[formulaCount] === formulaElement) {
+                    targetFormula = op.insert.formula;
+                    formulaIndex = charIndex;
+                    break;
+                  }
+                }
+                formulaCount += 1;
+                charIndex += 1;
+              } else if (typeof op.insert === 'string') {
+                charIndex += op.insert.length;
+              }
+            }
+          }
+          
+          if (targetFormula && formulaIndex >= 0) {
+            // Set cursor position at the formula
+            quill.setSelection(formulaIndex, 1);
+            
+            // Delete the existing formula first
+            quill.deleteText(formulaIndex, 1, 'user');
+            
+            // Wait a bit, then open formula editor
+            setTimeout(function() {
+              var formulaButton = quill.getModule('toolbar').container.querySelector('.ql-formula');
+              if (formulaButton) {
+                formulaButton.click();
+                
+                // Wait for editor to open, then fill it with current formula
+                setTimeout(function() {
+                  var formulaInput = document.querySelector('.ql-formula-editor input');
+                  if (formulaInput) {
+                    formulaInput.value = targetFormula;
+                    formulaInput.select();
+                    formulaInput.focus();
+                    
+                    // Listen for when the formula is saved
+                    var saveButton = document.querySelector('.ql-formula-editor .ql-action');
+                    
+                    if (saveButton) {
+                      saveButton.addEventListener('click', function saveHandler() {
+                        setTimeout(function() {
+                          updateMathPreview();
+                        }, 100);
+                      }, { once: true });
+                    }
+                    
+                    // Also listen for Enter key
+                    formulaInput.addEventListener('keydown', function enterHandler(e) {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        setTimeout(function() {
+                          updateMathPreview();
+                        }, 100);
+                      }
+                    }, { once: true });
+                  }
+                }, 150);
+              }
+            }, 50);
+          } else {
+            console.error('Could not find formula or index:', { targetFormula: targetFormula, formulaIndex: formulaIndex });
+          }
+        } catch (error) {
+          console.error('Error editing formula:', error);
+        }
+      }
+      
+      // Fallback function using index if Quill.find doesn't work
+      function editFormulaAtPosition(formulaIndex) {
+        try {
+          var delta = quill.getContents();
+          var formulaCount = 0;
+          var charIndex = 0;
+          var targetFormula = '';
+          var formulaPosition = -1;
+          
+          // Find the formula at the given index
+          for (var i = 0; i < delta.ops.length; i++) {
+            var op = delta.ops[i];
+            if (op.insert) {
+              if (op.insert.formula) {
+                if (formulaCount === formulaIndex) {
+                  targetFormula = op.insert.formula;
+                  formulaPosition = charIndex;
+                  break;
+                }
+                formulaCount += 1;
+                charIndex += 1;
+              } else if (typeof op.insert === 'string') {
+                charIndex += op.insert.length;
+              }
+            }
+          }
+          
+          if (targetFormula && formulaPosition >= 0) {
+            // Set cursor position at the formula
+            quill.setSelection(formulaPosition, 1);
+            
+            // Delete the existing formula first
+            quill.deleteText(formulaPosition, 1, 'user');
+            
+            // Wait a bit, then open formula editor
+            setTimeout(function() {
+              var formulaButton = quill.getModule('toolbar').container.querySelector('.ql-formula');
+              if (formulaButton) {
+                formulaButton.click();
+                
+                // Wait for editor to open, then fill it with current formula
+                setTimeout(function() {
+                  var formulaInput = document.querySelector('.ql-formula-editor input');
+                  if (formulaInput) {
+                    formulaInput.value = targetFormula;
+                    formulaInput.select();
+                    formulaInput.focus();
+                    
+                    // Listen for when the formula is saved
+                    var saveButton = document.querySelector('.ql-formula-editor .ql-action');
+                    
+                    if (saveButton) {
+                      saveButton.addEventListener('click', function saveHandler() {
+                        setTimeout(function() {
+                          updateMathPreview();
+                        }, 100);
+                      }, { once: true });
+                    }
+                    
+                    // Also listen for Enter key
+                    formulaInput.addEventListener('keydown', function enterHandler(e) {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        setTimeout(function() {
+                          updateMathPreview();
+                        }, 100);
+                      }
+                    }, { once: true });
+                  }
+                }, 150);
+              }
+            }, 50);
+          }
+        } catch (error) {
+          console.error('Error editing formula:', error);
+        }
+      }
+      
+      // Handle clicks on formulas to edit them
+      quill.root.addEventListener('click', function(e) {
+        var clickedElement = e.target;
+        
+        // Check if clicked element is part of a formula
+        var formulaElement = null;
+        
+        // Try to find formula element by traversing up the DOM tree
+        var element = clickedElement;
+        while (element && element !== quill.root) {
+          if (element.classList && (
+              element.classList.contains('ql-formula') ||
+              element.classList.contains('katex') ||
+              element.classList.contains('katex-html') ||
+              element.hasAttribute('data-formula')
+          )) {
+            formulaElement = element;
+            break;
+          }
+          element = element.parentElement;
+        }
+        
+        // If not found, check using closest
+        if (!formulaElement) {
+          formulaElement = clickedElement.closest('.ql-formula, .katex, span[data-formula]');
+        }
+        
+        if (formulaElement) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          try {
+            // Try to find the actual ql-formula container
+            var actualFormula = formulaElement.closest('.ql-formula');
+            if (!actualFormula) {
+              // Try to find it in parent hierarchy
+              var parent = formulaElement.parentElement;
+              while (parent && parent !== quill.root) {
+                if (parent.classList && parent.classList.contains('ql-formula')) {
+                  actualFormula = parent;
+                  break;
+                }
+                parent = parent.parentElement;
+              }
+            }
+            
+            // If we found a formula element, try to edit it
+            if (actualFormula) {
+              // Try using Quill API first (more reliable)
+              setTimeout(function() {
+                try {
+                  editFormulaAtElement(actualFormula);
+                } catch (err) {
+                  // Fallback to index-based method
+                  console.log('Using fallback method');
+                  var allFormulas = quill.root.querySelectorAll('.ql-formula');
+                  var clickedIndex = -1;
+                  for (var i = 0; i < allFormulas.length; i++) {
+                    if (allFormulas[i] === actualFormula || allFormulas[i].contains(clickedElement)) {
+                      clickedIndex = i;
+                      break;
+                    }
+                  }
+                  if (clickedIndex >= 0) {
+                    editFormulaAtPosition(clickedIndex);
+                  }
+                }
+              }, 100);
+            }
+          } catch (error) {
+            console.error('Error handling formula click:', error);
+          }
+        }
+      }, true);
+      
+              // Also handle double-click for easier editing
+        quill.root.addEventListener('dblclick', function(e) {
+          var clickedElement = e.target;
+          var formulaElement = clickedElement.closest('.ql-formula, .katex, span[data-formula], .katex-html');
+          
+          if (formulaElement) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            try {
+              var actualFormula = formulaElement.closest('.ql-formula') || formulaElement;
+              // Use editFormulaAtElement which is more reliable
+              setTimeout(function() {
+                editFormulaAtElement(actualFormula);
+              }, 100);
+            } catch (error) {
+              console.error('Error handling formula double-click:', error);
+            }
+          }
+        }, true);
+
+      // Function to update math preview
+      function updateMathPreview() {
+        var previewContent = document.getElementById('mathPreviewContent');
+        if (!previewContent) return;
+        
+        // Get HTML content directly from Quill editor
+        var htmlContent = quill.root.innerHTML;
+        
+        // If content is empty
+        if (!htmlContent || htmlContent.trim() === '' || htmlContent === '<p><br></p>') {
+          previewContent.innerHTML = '';
+          return;
+        }
+        
+        // Get delta to extract formula LaTeX codes
+        var delta = quill.getContents();
+        var formulaIndex = 0;
+        var formulasFromDelta = [];
+        
+        if (delta && delta.ops) {
+          delta.ops.forEach(function(op) {
+            if (op.insert && op.insert.formula) {
+              formulasFromDelta.push(op.insert.formula);
+            }
+          });
+        }
+        
+        // Create temporary container to process HTML
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        
+        // Replace KaTeX/Quill formula elements with MathJax format
+        var formulaElements = tempDiv.querySelectorAll('.ql-formula, .katex, [class*="katex"]');
+        formulaElements.forEach(function(formulaEl) {
+          var formulaText = '';
+          
+          // Try to get formula LaTeX from delta first (most accurate)
+          if (formulaIndex < formulasFromDelta.length) {
+            formulaText = formulasFromDelta[formulaIndex];
+            formulaIndex++;
+          } 
+          // Try to extract from KaTeX MathML annotation
+          else {
+            var annotation = formulaEl.querySelector('annotation[encoding="application/x-tex"]');
+            if (annotation) {
+              formulaText = annotation.textContent || annotation.innerText;
+            }
+          }
+          
+          if (formulaText) {
+            // Replace with MathJax inline math span
+            var mathSpan = document.createElement('span');
+            mathSpan.className = 'math-inline';
+            mathSpan.textContent = '\\( ' + formulaText + ' \\)';
+            if (formulaEl.parentNode) {
+              formulaEl.parentNode.replaceChild(mathSpan, formulaEl);
+            }
+          }
+        });
+        
+        // Get processed HTML
+        var processedHtml = tempDiv.innerHTML;
+        
+        // Clean up any remaining KaTeX CSS classes
+        processedHtml = processedHtml.replace(/class="[^"]*katex[^"]*"/g, '');
+        
+        // Update preview content
+        previewContent.innerHTML = processedHtml || htmlContent;
+        
+        // Render MathJax after a short delay
+        setTimeout(function() {
+          if (window.MathJax) {
+            if (window.MathJax.typesetPromise) {
+              MathJax.typesetPromise([previewContent]).catch(function(err) {
+                console.error('MathJax rendering error:', err);
+              });
+            } else if (window.MathJax.Hub) {
+              MathJax.Hub.Queue(["Typeset", MathJax.Hub, previewContent]);
+            }
+          }
+        }, 150);
+      }
+
+      // Update preview on Quill content change (debounced for performance)
+      var previewTimeout;
+      quill.on('text-change', function() {
+        clearTimeout(previewTimeout);
+        previewTimeout = setTimeout(updateMathPreview, 300);
+      });
+      
+      // Also update on selection change (when formula is inserted)
+      quill.on('selection-change', function() {
+        clearTimeout(previewTimeout);
+        previewTimeout = setTimeout(updateMathPreview, 300);
+      });
+
+      // Initial preview update after MathJax loads
+      setTimeout(function() {
+        if (window.MathJax) {
+          updateMathPreview();
+        } else {
+          setTimeout(updateMathPreview, 1000);
+        }
+      }, 500);
+    });
+  </script>
+  <script>
+    (function(){
+      var sel = document.getElementById('qtype');
+      var mcq = document.getElementById('mcq');
+      var tfq = document.getElementById('tfq');
+      var imgq = document.getElementById('imgq');
+      var essayWarning = document.getElementById('essay_warning');
+      function apply(){
+        var v = sel.value;
+        mcq.style.display = (v === 'اختياري' || v === 'صورة') ? 'block' : 'none';
+        tfq.style.display = (v === 'صح أو خطأ') ? 'block' : 'none';
+        imgq.style.display = (v === 'صورة') ? 'block' : 'none';
+        essayWarning.style.display = (v === 'مقالي') ? 'block' : 'none';
+      }
+      sel.addEventListener('change', apply);
+      apply();
+    })();
+  </script>
+  <div style="position:fixed; bottom:10px; left:0; right:0; text-align:center; font-weight:bold; font-size:16px; color:#333; padding:10px; background:#f9f9f9; z-index:9999; border-top:1px solid #e0e0e0">
+    تصميم قسم الحاسب الآلي بمدارس الأنجال الأهلية©
+  </div>
+</body>
+</html>
